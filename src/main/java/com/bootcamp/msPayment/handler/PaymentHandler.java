@@ -1,6 +1,7 @@
 package com.bootcamp.msPayment.handler;
 
-import com.bootcamp.msPayment.entities.Payment;
+import com.bootcamp.msPayment.models.entities.Payment;
+import com.bootcamp.msPayment.services.ICreditDTOService;
 import com.bootcamp.msPayment.services.IPaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -24,6 +25,9 @@ public class PaymentHandler {
     @Autowired
     private IPaymentService service;
 
+    @Autowired
+    private ICreditDTOService creditService;
+
     public Mono<ServerResponse> findAll(ServerRequest request){
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(service.findAll(), Payment.class);
@@ -42,13 +46,15 @@ public class PaymentHandler {
     public Mono<ServerResponse> newPayment(ServerRequest request){
 
         Mono<Payment> paymentMono = request.bodyToMono(Payment.class);
-
-        return paymentMono.flatMap( c -> {
-            if(c.getDate() == null){
-                c.setDate(new Date());
-            }
-            return service.create(c);
-        }).flatMap( c -> ServerResponse
+        String id = request.pathVariable("id");
+        return paymentMono.flatMap( paymentRequest -> creditService.findById(id)
+                .flatMap(credit -> {
+                credit.setAmount(credit.getAmount() - paymentRequest.getAmount());
+                return creditService.updateCredit(credit);
+                }).flatMap(payment ->  {
+                    return service.create(paymentRequest);
+                }))
+                .flatMap( c -> ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(c)));
@@ -72,7 +78,6 @@ public class PaymentHandler {
 
         return service.findById(id).zipWith(paymentMono, (db,req) -> {
                     db.setAmount(req.getAmount());
-                    db.setDebtNumber(req.getDebtNumber());
                     return db;
                 }).flatMap( c -> ServerResponse
                         .ok()

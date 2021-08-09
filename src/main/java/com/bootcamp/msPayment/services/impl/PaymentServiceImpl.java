@@ -1,15 +1,21 @@
 package com.bootcamp.msPayment.services.impl;
 
-import com.bootcamp.msPayment.entities.Payment;
+import com.bootcamp.msPayment.models.dto.CreditDTO;
+import com.bootcamp.msPayment.models.entities.Payment;
 import com.bootcamp.msPayment.repositories.PaymentRepository;
 import com.bootcamp.msPayment.services.IPaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 public class PaymentServiceImpl implements IPaymentService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
     @Autowired
     private PaymentRepository repository;
@@ -36,7 +42,6 @@ public class PaymentServiceImpl implements IPaymentService {
                 return null;
             }
             c.setAmount(o.getAmount());
-            c.setDebtNumber(o.getDebtNumber());
 
             return Mono.just(c);
         });
