@@ -22,8 +22,6 @@ public class Payment {
 
     private String identityNumber;
 
-    private final String TYPEOFTRANSACTION = "PAYMENT";
-
     private double amount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
