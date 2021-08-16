@@ -1,6 +1,6 @@
 package com.bootcamp.msPayment.handler;
 
-import com.bootcamp.msPayment.models.dto.TransactionActiveDTO;
+import com.bootcamp.msPayment.models.dto.TransactionDTO;
 import com.bootcamp.msPayment.models.entities.Payment;
 import com.bootcamp.msPayment.services.ICreditDTOService;
 import com.bootcamp.msPayment.services.IPaymentService;
@@ -15,8 +15,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
-import java.util.Date;
 
 @Slf4j(topic = "payment_handler")
 @Component
@@ -57,7 +55,7 @@ public class PaymentHandler {
                 credit.setAmount(credit.getAmount() - paymentRequest.getAmount());
                 return creditService.updateCredit(credit);
                 }).flatMap(creditTransaction -> {
-                            TransactionActiveDTO transaction = new TransactionActiveDTO();
+                            TransactionDTO transaction = new TransactionDTO();
                             transaction.setTypeoftransaction("PAYMENT");
                             transaction.setTransactionAmount(paymentRequest.getAmount());
                             transaction.setIdentityNumber(paymentRequest.getIdentityNumber());

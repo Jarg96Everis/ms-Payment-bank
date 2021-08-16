@@ -1,6 +1,6 @@
 package com.bootcamp.msPayment.services.impl;
 
-import com.bootcamp.msPayment.models.dto.TransactionActiveDTO;
+import com.bootcamp.msPayment.models.dto.TransactionDTO;
 import com.bootcamp.msPayment.services.ITransactionDTOService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,18 +11,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
-public class TransactionActiveServiceImpl implements ITransactionDTOService {
+public class TransactionServiceImpl implements ITransactionDTOService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionActiveServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceImpl.class);
     private final WebClient.Builder client;
 
     @Autowired
-    public TransactionActiveServiceImpl(WebClient.Builder client) {
+    public TransactionServiceImpl(WebClient.Builder client) {
         this.client = client;
     }
 
     @Override
-    public Mono<TransactionActiveDTO> saveTransaction(TransactionActiveDTO transaction) {
+    public Mono<TransactionDTO> saveTransaction(TransactionDTO transaction) {
         LOGGER.info("initializing Transaction create");
 
         return client
@@ -33,7 +33,7 @@ public class TransactionActiveServiceImpl implements ITransactionDTOService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(transaction)
                 .retrieve()
-                .bodyToMono(TransactionActiveDTO.class);
+                .bodyToMono(TransactionDTO.class);
     }
 
 }
