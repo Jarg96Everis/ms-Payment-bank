@@ -9,9 +9,18 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+/**
+ * The type Router config.
+ */
 @Configuration
 public class RouterConfig {
 
+    /**
+     * Routes router function.
+     *
+     * @param paymentHandler the payment handler
+     * @return the router function
+     */
     @Bean
     public RouterFunction<ServerResponse> routes(PaymentHandler paymentHandler){
 

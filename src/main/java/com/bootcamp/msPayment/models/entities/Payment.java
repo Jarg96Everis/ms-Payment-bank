@@ -10,6 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * The type Payment.
+ */
 @Document(collection = "payment")
 @Getter
 @Setter
